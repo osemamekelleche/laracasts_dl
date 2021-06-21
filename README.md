@@ -1,6 +1,6 @@
 # Laracasts_dl
 
-Script to download Laracasts courses.
+Script to download Laracasts free courses.
 
 First of all, you need to install all requirements for this script using pip
 
