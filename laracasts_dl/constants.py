@@ -1,4 +1,3 @@
-
 # The beginning url of laracasts courses urls
 BEGIN = 'https://laracasts.com/series/'
 

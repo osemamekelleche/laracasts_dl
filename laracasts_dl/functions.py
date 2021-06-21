@@ -43,15 +43,12 @@ def is_already_downloaded(dl_link, filename):
             return True
     return False
 
-
 def get_path_name(path_name):
     forbidden_chars = ['\\', '/', '?', '*', '"', '<', '>', '|', ':']
     for fc in forbidden_chars:
         if fc in path_name:
             path_name = path_name.replace(fc, '')
-
     return path_name
-
 
 class Course:
 
