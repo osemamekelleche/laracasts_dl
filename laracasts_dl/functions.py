@@ -4,9 +4,6 @@ import json
 from .constants import *
 import os
 import sys
-import shutil
-import re
-
 
 # Leading zeros depending on ep_count
 def lzeros(number, ep_count):
@@ -56,6 +53,7 @@ class Course:
         self.url = url
         self.course = {}
         self.chapters = []
+        self.relative = 0
 
     def is_valid(self):
         self.url = self.url.strip('\'')
@@ -90,19 +88,19 @@ class Course:
     def download_chapter(self, chapter_no, chapters_count):
         chapter_episodes = self.chapters[chapter_no - 1].get('episodes')
         ep_count = len(chapter_episodes)
-        relative = 0
+        
         if chapters_count > 1:
             chapter_title = self.chapters[chapter_no - 1].get('heading')
             chapter = '%s.%s' %(lzeros(chapter_no, chapters_count), get_path_name(chapter_title))
             print('\n\nDownloading chapter: %s' %chapter)    
             if chapter_no - 2 >= 0:
-                relative = self.chapters[chapter_no - 2].get('count')
+                self.relative += self.chapters[chapter_no - 2].get('count') 
             if not os.path.exists(chapter) or not os.path.isdir(chapter):
                 os.mkdir(chapter)
         for episode in chapter_episodes:
             if chapters_count > 1:
                 os.chdir(chapter)
-            self.download_episode(episode, episode.get('position') - relative, ep_count)
+            self.download_episode(episode, episode.get('position') - self.relative, ep_count)
             if chapters_count > 1:
                 os.chdir('..')
         if chapters_count > 1:    
