@@ -11,6 +11,10 @@ def main():
     
     course = Course(args.course_url)
     
+    if not course.is_valid():
+        print(f'The url: "{args.course_url}" is not a valid course url')
+        exit(0)
+
     os.chdir(args.output_dir)
     
     course.download()

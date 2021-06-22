@@ -56,17 +56,6 @@ class Course:
         self.url = url
         self.course = {}
         self.chapters = []
-        self.episodes = []
-        self.video_profile_id = 0
-
-    def get_video_profile_id(self):
-        profile_ids = []
-        for episode in self.episodes:
-            if '&profile_id' in episode.get('download_sd'):
-                profile_id = int(re.findall('&profile_id=(.+)', episode.get('download_sd'))[0])
-                profile_ids.append(profile_id)
-        profile_ids.sort()
-        self.video_profile_id = profile_ids.pop()
 
     def is_valid(self):
         self.url = self.url.strip('\'')
@@ -76,13 +65,14 @@ class Course:
             return False
         content = requests.get(self.url).content
         soup = BeautifulSoup(content, PARSER)
-        if soup.title.text == 'Laracasts Search' or soup.title.text == 'Laracasts 404':
+        json_data = soup.find('div', id='app')['data-page']
+        json_data = json.loads(json_data)
+        if 'series' not in json_data.get('props'):
             return False
         return True
 
     def download(self):
-        ep1_url = '%s/episodes/1' % self.url.rstrip('/')
-        content = requests.get(ep1_url).content
+        content = requests.get(self.url).content
         soup = BeautifulSoup(content, PARSER)
         videos = soup.find('div', id='app')['data-page']
         self.course = json.loads(videos).get('props').get('series')
