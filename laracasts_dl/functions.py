@@ -107,6 +107,9 @@ class Course:
             print('Chapter: %s downloaded' %chapter)
 
     def download_episode(self, episode, index, ep_count):
+        if episode.get('download') is None:
+            print("Subscription required")
+            return False
         protocol = '' if str(episode.get('download')).startswith('https:') else 'https:'
         dl_link = '%s%s' %(protocol, episode.get('download'))
         filename = '%s.%s.mp4' %(lzeros(index, ep_count), get_path_name(episode.get('title')))
